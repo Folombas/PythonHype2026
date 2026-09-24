@@ -40,11 +40,7 @@ def ask_birth_date():
             return bday
 
 
-# ---------- Расчёт возраста ----------
-
-DAY_NAMES = ["понедельник", "вторник", "среда", "четверг",
-             "пятница", "суббота", "воскресенье"]
-
+# ---------- Правильные русские окончания ----------
 
 def plural_years(n):
     """Возвращает 'год', 'года' или 'лет' для числа n."""
@@ -57,6 +53,25 @@ def plural_years(n):
     if last in (2, 3, 4):
         return "года"
     return "лет"
+
+
+def plural_days(n):
+    """Возвращает 'день', 'дня' или 'дней' для числа n."""
+    n = abs(n)
+    if 11 <= n % 100 <= 14:
+        return "дней"
+    last = n % 10
+    if last == 1:
+        return "день"
+    if last in (2, 3, 4):
+        return "дня"
+    return "дней"
+
+
+# ---------- Расчёт возраста ----------
+
+DAY_NAMES = ["понедельник", "вторник", "среда", "четверг",
+             "пятница", "суббота", "воскресенье"]
 
 
 def age_info(bday):
@@ -99,7 +114,8 @@ def greet(name, style, info):
         "3": f"Хай, {name}! 🐍 Python ждёт тебя.",
         "4": f"Салют, {name}! Сегодня {today:%d.%m.%Y}.",
         "5": (f"{name}, вы родились в {info['weekday']}, "
-              f"прожили {info['days_lived']} дней."),
+              f"прожили {info['days_lived']} "
+              f"{plural_days(info['days_lived'])}."),
     }
     return styles.get(style, f"Привет, {name}!")
 
@@ -117,12 +133,13 @@ def main():
     info = age_info(bday)
 
     print()
-    print(f"Отлично, {name}! Вам {info['years']} {plural_years(info['years'])}.")
+    print(f"Отлично, {name}! Вам {info['years']} "
+          f"{plural_years(info['years'])}.")
     if info["days_to_next"] == 0:
         print("🎉 С днём рождения!")
     else:
         print(f"До следующего дня рождения: {info['days_to_next']} "
-              f"{plural_years(info['days_to_next'])}.")
+              f"{plural_days(info['days_to_next'])}.")
 
     while True:
         print()
