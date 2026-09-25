@@ -3,6 +3,7 @@
 # ветвление, словарь, модуль datetime, обработку ошибок
 
 import datetime
+import hashlib
 
 # ---------- ANSI-цвета для терминала ----------
 
@@ -105,6 +106,26 @@ def zodiac_sign(day, month):
             return sign
 
     return "Стрелец"    
+    
+def daily_prediction(name):
+    """Возвращает персональное предсказание на сегодня (детерминированное)."""
+    today = datetime.date.today().isoformat()
+    seed = f"{name}-{today}"
+    h = int(hashlib.md5(seed.encode()).hexdigest(), 16)
+
+    predictions = [
+        "Сегодня отличный день для новых начинаний.",
+        "Удача улыбнётся вам в неожиданном месте.",
+        "Не бойтесь экспериментировать — сегодня всё получится.",
+        "Хороший день, чтобы узнать что-то новое.",
+        "Обратите внимание на детали — в них скрыт ответ.",
+        "Ваша энергия сегодня особенно сильна — используйте её.",
+        "День подходит для тёплых разговоров с близкими.",
+        "Вас ждёт приятная неожиданность.",
+        "Сделайте сегодня то, что давно откладывали.",
+        "Доверьтесь интуиции — она не подведёт.",
+    ]
+    return predictions[h % len(predictions)]    
 
 
 # ---------- Расчёт возраста ----------
@@ -176,7 +197,9 @@ def main():
     print()
     print(f"Отлично, {name}! Вам {info['years']} "
           f"{plural_years(info['years'])}.")
-    print(f"Ваш знак зодиака: {info['zodiac']}.")       
+    print(f"Ваш знак зодиака: {info['zodiac']}.")  
+    print(f"{Color.YELLOW}🌟 Предсказание на сегодня: "
+          f"{daily_prediction(name)}{Color.RESET}")     
     if info["days_to_next"] == 0:
         print(f"{Color.BOLD}{Color.RED}🎉 С днём рождения! 🎉{Color.RESET}")
     else:
