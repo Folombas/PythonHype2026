@@ -165,7 +165,30 @@ def cosmic_age(bday):
 def cosmic_age(bday):
     """Возвращает список (планета, возраст на ней) для всех планет."""
     earth_years = (datetime.date.today() - bday).days / 365.2425
-    return [(name, earth_years / period) for name, period in PLANETS]    
+    return [(name, earth_years / period) for name, period in PLANETS]  
+    
+    
+# ---------- Восточный календарь ----------
+
+EASTERN_ANIMALS = [
+    "🐀 Крыса", "🐂 Бык", "🐅 Тигр", "🐇 Кролик",
+    "🐉 Дракон", "🐍 Змея", "🐎 Лошадь", "🐐 Коза",
+    "🐒 Обезьяна", "🐓 Петух", "🐕 Собака", "🐖 Свинья",
+]
+
+
+def eastern_animal(bday):
+    """Возвращает животное восточного календаря по дате рождения.
+
+    Учитывает, что китайский Новый год наступает в конце января —
+    середине февраля, поэтому для дат до ~20 февраля берётся
+    предыдущий год.
+    """
+    year = bday.year
+    # Приблизительная граница китайского Нового года
+    if (bday.month, bday.day) < (2, 20):
+        year -= 1
+    return EASTERN_ANIMALS[(year - 4) % 12]      
 
 
 # ---------- Расчёт возраста ----------
@@ -252,7 +275,10 @@ def main():
         print()
     print(f"{Color.PURPLE}🚀 Ваш возраст на других планетах:{Color.RESET}")
     for planet, age in cosmic_age(bday):
-        print(f"  {planet:<12} {age:>7.2f} лет")             
+        print(f"  {planet:<12} {age:>7.2f} лет")  
+        print()
+    print(f"{Color.RED}🐲 Восточный календарь: "
+          f"{eastern_animal(bday)}{Color.RESET}")               
     if info["days_to_next"] == 0:
         print(f"{Color.BOLD}{Color.RED}🎉 С днём рождения! 🎉{Color.RESET}")
     else:
