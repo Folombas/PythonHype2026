@@ -4,6 +4,20 @@
 
 import datetime
 
+# ---------- ANSI-цвета для терминала ----------
+
+class Color:
+    """ANSI-коды для цветного вывода в терминале."""
+    RESET  = "\033[0m"
+    BOLD   = "\033[1m"
+    RED    = "\033[91m"
+    GREEN  = "\033[92m"
+    YELLOW = "\033[93m"
+    BLUE   = "\033[94m"
+    PURPLE = "\033[95m"
+    CYAN   = "\033[96m"
+    WHITE  = "\033[97m"
+
 
 # ---------- Дата рождения ----------
 
@@ -129,19 +143,20 @@ def age_info(bday):
 # ---------- Приветствия ----------
 
 def greet(name, style, info):
-    """Возвращает приветствие в выбранном стиле."""
+    """Возвращает приветствие в выбранном стиле (с цветом)."""
     years = info["years"]
     suffix = plural_years(years)
     today = datetime.date.today()
+    C = Color
 
     styles = {
-        "1": f"Привет, {name}! Добро пожаловать в Python.",
-        "2": f"Здравствуйте, {name}. Вам {years} {suffix}.",
-        "3": f"Хай, {name}! 🐍 Python ждёт тебя.",
-        "4": f"Салют, {name}! Сегодня {today:%d.%m.%Y}.",
-        "5": (f"{name}, вы родились в {info['weekday']}, "
+        "1": f"{C.GREEN}Привет, {name}! Добро пожаловать в Python.{C.RESET}",
+        "2": f"{C.CYAN}Здравствуйте, {name}. Вам {years} {suffix}.{C.RESET}",
+        "3": f"{C.YELLOW}Хай, {name}! 🐍 Python ждёт тебя.{C.RESET}",
+        "4": f"{C.BLUE}Салют, {name}! Сегодня {today:%d.%m.%Y}.{C.RESET}",
+        "5": (f"{C.PURPLE}{name}, вы родились в {info['weekday']}, "
               f"прожили {info['days_lived']} "
-              f"{plural_days(info['days_lived'])}."),
+              f"{plural_days(info['days_lived'])}.{C.RESET}"),
     }
     return styles.get(style, f"Привет, {name}!")
 
@@ -163,7 +178,7 @@ def main():
           f"{plural_years(info['years'])}.")
     print(f"Ваш знак зодиака: {info['zodiac']}.")       
     if info["days_to_next"] == 0:
-        print("🎉 С днём рождения!")
+        print(f"{Color.BOLD}{Color.RED}🎉 С днём рождения! 🎉{Color.RESET}")
     else:
         print(f"До следующего дня рождения: {info['days_to_next']} "
               f"{plural_days(info['days_to_next'])}.")
