@@ -144,6 +144,28 @@ def render_bar(value, width=30):
     bar = ["─"] * width
     bar[pos] = "●"
     return "".join(bar)    
+    
+# ---------- Космический возраст ----------
+
+PLANETS = [
+    ("☿ Меркурий", 0.2408467),
+    ("♀ Венера",   0.61519726),
+    ("♂ Марс",     1.8808158),
+    ("♃ Юпитер",   11.862615),
+    ("♄ Сатурн",   29.447498),
+    ("⛢ Уран",     84.016846),
+    ("♆ Нептун",   164.79132),
+]
+
+def cosmic_age(bday):
+    """Возвращает список (планета, возраст на ней) для всех планет."""
+    earth_years = (datetime.date.today() - bday).days / 365.2425
+    return [(name, earth_years / period) for name, period in PLANETS]
+
+def cosmic_age(bday):
+    """Возвращает список (планета, возраст на ней) для всех планет."""
+    earth_years = (datetime.date.today() - bday).days / 365.2425
+    return [(name, earth_years / period) for name, period in PLANETS]    
 
 
 # ---------- Расчёт возраста ----------
@@ -226,7 +248,11 @@ def main():
     print(f"  Эмоциональный:   {render_bar(bio['emotional'])}  "
           f"{bio['emotional']:+.2f}")
     print(f"  Интеллектуальный:{render_bar(bio['intellectual'])}  "
-          f"{bio['intellectual']:+.2f}")        
+          f"{bio['intellectual']:+.2f}") 
+        print()
+    print(f"{Color.PURPLE}🚀 Ваш возраст на других планетах:{Color.RESET}")
+    for planet, age in cosmic_age(bday):
+        print(f"  {planet:<12} {age:>7.2f} лет")             
     if info["days_to_next"] == 0:
         print(f"{Color.BOLD}{Color.RED}🎉 С днём рождения! 🎉{Color.RESET}")
     else:
