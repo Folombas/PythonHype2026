@@ -4,6 +4,7 @@
 
 import datetime
 import hashlib
+import math
 
 # ---------- ANSI-цвета для терминала ----------
 
@@ -126,6 +127,23 @@ def daily_prediction(name):
         "Доверьтесь интуиции — она не подведёт.",
     ]
     return predictions[h % len(predictions)]    
+    
+def biorhythm(bday):
+    """Рассчитывает биоритмы (физический, эмоциональный, интеллектуальный)."""
+    days = (datetime.date.today() - bday).days
+    return {
+        "physical":     math.sin(2 * math.pi * days / 23),
+        "emotional":    math.sin(2 * math.pi * days / 28),
+        "intellectual": math.sin(2 * math.pi * days / 33),
+    }
+
+
+def render_bar(value, width=30):
+    """Рисует горизонтальную шкалу для значения от -1 до +1."""
+    pos = int((value + 1) / 2 * (width - 1))
+    bar = ["─"] * width
+    bar[pos] = "●"
+    return "".join(bar)    
 
 
 # ---------- Расчёт возраста ----------
@@ -199,7 +217,16 @@ def main():
           f"{plural_years(info['years'])}.")
     print(f"Ваш знак зодиака: {info['zodiac']}.")  
     print(f"{Color.YELLOW}🌟 Предсказание на сегодня: "
-          f"{daily_prediction(name)}{Color.RESET}")     
+          f"{daily_prediction(name)}{Color.RESET}")   
+        print()
+    print(f"{Color.CYAN}📊 Ваши биоритмы на сегодня:{Color.RESET}")
+    bio = biorhythm(bday)
+    print(f"  Физический:      {render_bar(bio['physical'])}  "
+          f"{bio['physical']:+.2f}")
+    print(f"  Эмоциональный:   {render_bar(bio['emotional'])}  "
+          f"{bio['emotional']:+.2f}")
+    print(f"  Интеллектуальный:{render_bar(bio['intellectual'])}  "
+          f"{bio['intellectual']:+.2f}")        
     if info["days_to_next"] == 0:
         print(f"{Color.BOLD}{Color.RED}🎉 С днём рождения! 🎉{Color.RESET}")
     else:
