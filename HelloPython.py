@@ -66,6 +66,31 @@ def plural_days(n):
     if last in (2, 3, 4):
         return "дня"
     return "дней"
+    
+def zodiac_sign(day, month):
+    """Возвращает знак зодиака по дню и месяцу рождения."""
+    if (month == 1 and day <= 19) or (month == 12 and day >= 22):
+        return "Козерог"
+
+    signs = [
+        ((1, 20), "Водолей"),
+        ((2, 19), "Рыбы"),
+        ((3, 21), "Овен"),
+        ((4, 20), "Телец"),
+        ((5, 21), "Близнецы"),
+        ((6, 21), "Рак"),
+        ((7, 23), "Лев"),
+        ((8, 23), "Дева"),
+        ((9, 23), "Весы"),
+        ((10, 23), "Скорпион"),
+        ((11, 22), "Стрелец"),
+    ]
+
+    for (m, d), sign in signs:
+        if (month, day) < (m, d):
+            return sign
+
+    return "Стрелец"    
 
 
 # ---------- Расчёт возраста ----------
@@ -97,6 +122,7 @@ def age_info(bday):
         "days_lived": days_lived,
         "days_to_next": days_to_next,
         "weekday": DAY_NAMES[bday.weekday()],
+        "zodiac": zodiac_sign(bday.day, bday.month),
     }
 
 
@@ -135,6 +161,7 @@ def main():
     print()
     print(f"Отлично, {name}! Вам {info['years']} "
           f"{plural_years(info['years'])}.")
+    print(f"Ваш знак зодиака: {info['zodiac']}.")       
     if info["days_to_next"] == 0:
         print("🎉 С днём рождения!")
     else:
