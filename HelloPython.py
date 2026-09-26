@@ -228,6 +228,27 @@ def personal_day_number(bday):
     """Персональное число дня: life path + сегодняшняя дата."""
     today = datetime.date.today()
     return digit_sum(life_path_number(bday) + today.day + today.month)
+    
+# ---------- Жизнь в разных единицах ----------
+
+def life_in_units(bday):
+    """Возвращает словарь с прожитым временем в разных единицах."""
+    days = (datetime.date.today() - bday).days
+
+    return {
+        "days":       days,
+        "hours":      days * 24,
+        "minutes":    days * 24 * 60,
+        "seconds":    days * 24 * 60 * 60,
+        "heartbeats": days * 24 * 60 * 70,     # ~70 уд/мин
+        "breaths":    days * 24 * 60 * 16,     # ~16 вдохов/мин
+        "sleep_days": days // 3,               # ~треть жизни во сне
+    }
+
+
+def format_big_number(n):
+    """Форматирует число с пробелами как разделителями тысяч."""
+    return f"{n:,}".replace(",", " ")    
 
 
 # ---------- Расчёт возраста ----------
@@ -328,6 +349,17 @@ def main():
     print(f"{Color.CYAN}🔢 Число жизненного пути: {life_path}{Color.RESET}")
     print(f"   {LIFE_PATH_MEANINGS[life_path]}")
     print(f"{Color.CYAN}📅 Персональное число дня: {day_num}{Color.RESET}")
+
+	    print()
+    print(f"{Color.BLUE}⏳ Ваша жизнь в разных единицах:{Color.RESET}")
+    units = life_in_units(bday)
+    print(f"  Дней:          {format_big_number(units['days'])}")
+    print(f"  Часов:         {format_big_number(units['hours'])}")
+    print(f"  Минут:         {format_big_number(units['minutes'])}")
+    print(f"  Секунд:        {format_big_number(units['seconds'])}")
+    print(f"  Ударов сердца: {format_big_number(units['heartbeats'])}")
+    print(f"  Вдохов:        {format_big_number(units['breaths'])}")
+    print(f"  Дней во сне:   {format_big_number(units['sleep_days'])}")
 
     print()
     if info["days_to_next"] == 0:
