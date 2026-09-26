@@ -274,6 +274,26 @@ def name_compatibility(name1, name2):
         if percent >= threshold:
             return percent, verdict
     return percent, COMPATIBILITY_VERDICTS[-1][1]    
+    
+# ---------- Поколение ----------
+
+GENERATIONS = [
+    (1928, 1945, "🎩 Молчаливое поколение"),
+    (1946, 1964, "👔 Бэби-бумеры"),
+    (1965, 1980, "🎸 Поколение X"),
+    (1981, 1996, "💾 Поколение Y (миллениалы)"),
+    (1997, 2012, "📱 Поколение Z (зумеры)"),
+    (2013, 2100, "🚀 Поколение Альфа"),
+]
+
+
+def generation(bday):
+    """Возвращает название поколения по году рождения."""
+    year = bday.year
+    for start, end, name in GENERATIONS:
+        if start <= year <= end:
+            return name
+    return "🌍 Неизвестное поколение"   
 
 
 # ---------- Расчёт возраста ----------
@@ -399,6 +419,10 @@ def main():
         print(f"  {verdict}")
     else:
         print("  Пропущено.")
+        
+    print()
+    print(f"{Color.YELLOW}👥 Ваше поколение: "
+          f"{generation(bday)}{Color.RESET}")    
 
     print()
     if info["days_to_next"] == 0:
