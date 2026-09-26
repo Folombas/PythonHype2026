@@ -294,6 +294,56 @@ def generation(bday):
         if start <= year <= end:
             return name
     return "🌍 Неизвестное поколение"   
+    
+# ---------- Место рождения ----------
+
+CITY_VIBES = [
+    "🌊 город мечтателей и романтиков",
+    "🏔️ город сильных духом",
+    "🔥 город страсти и движения",
+    "🌿 город спокойствия и мудрости",
+    "⚡ город скорости и перемен",
+    "🎭 город тайн и вдохновения",
+    "🌟 город удачи и возможностей",
+    "📚 город знаний и традиций",
+]
+
+CITY_ELEMENTS = [
+    ("🔥 Огонь", "Энергия, страсть, лидерство"),
+    ("💧 Вода",  "Гибкость, интуиция, глубина"),
+    ("🌪️ Воздух","Свобода, общение, идеи"),
+    ("🌍 Земля", "Надёжность, терпение, стабильность"),
+]
+
+CITY_SACRED_NUMBERS = {
+    1: "символ начала и лидерства",
+    2: "символ партнёрства и гармонии",
+    3: "символ творчества и радости",
+    4: "символ порядка и стабильности",
+    5: "символ перемен и свободы",
+    6: "символ заботы и семьи",
+    7: "символ тайны и мудрости",
+    8: "символ силы и достижений",
+    9: "символ завершения и служения",
+}
+
+
+def birth_place_horoscope(city):
+    """Возвращает 'астрологический портрет' родного города."""
+    city_clean = city.strip().lower()
+    h = int(hashlib.md5(city_clean.encode()).hexdigest(), 16)
+
+    letters = len([c for c in city if c.isalpha()])
+    sacred = letters % 9 or 9
+
+    return {
+        "city":           city.strip(),
+        "letters":        letters,
+        "vibe":           CITY_VIBES[h % len(CITY_VIBES)],
+        "element":        CITY_ELEMENTS[(h // 7) % len(CITY_ELEMENTS)],
+        "sacred":         sacred,
+        "sacred_meaning": CITY_SACRED_NUMBERS[sacred],
+    }    
 
 
 # ---------- Расчёт возраста ----------
@@ -423,6 +473,19 @@ def main():
     print()
     print(f"{Color.YELLOW}👥 Ваше поколение: "
           f"{generation(bday)}{Color.RESET}")    
+          
+    print()
+    print(f"{Color.GREEN}🏡 Магия места рождения:{Color.RESET}")
+    city = input("  В каком городе вы родились? ").strip()
+    if city:
+        horo = birth_place_horoscope(city)
+        print(f"  🌆 {horo['city']}")
+        print(f"  Характер: {horo['vibe']}")
+        print(f"  Стихия:   {horo['element'][0]} — {horo['element'][1]}")
+        print(f"  Сакральное число: {horo['sacred']} "
+              f"— {horo['sacred_meaning']}")
+    else:
+        print("  Пропущено.")      
 
     print()
     if info["days_to_next"] == 0:
