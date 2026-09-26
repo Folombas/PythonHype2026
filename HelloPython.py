@@ -228,7 +228,8 @@ def personal_day_number(bday):
     """Персональное число дня: life path + сегодняшняя дата."""
     today = datetime.date.today()
     return digit_sum(life_path_number(bday) + today.day + today.month)
-    
+
+
 # ---------- Жизнь в разных единицах ----------
 
 def life_in_units(bday):
@@ -248,7 +249,7 @@ def life_in_units(bday):
 
 def format_big_number(n):
     """Форматирует число с пробелами как разделителями тысяч."""
-    return f"{n:,}".replace(",", " ")    
+    return f"{n:,}".replace(",", " ")
 
 
 # ---------- Расчёт возраста ----------
@@ -350,7 +351,7 @@ def main():
     print(f"   {LIFE_PATH_MEANINGS[life_path]}")
     print(f"{Color.CYAN}📅 Персональное число дня: {day_num}{Color.RESET}")
 
-	    print()
+    print()
     print(f"{Color.BLUE}⏳ Ваша жизнь в разных единицах:{Color.RESET}")
     units = life_in_units(bday)
     print(f"  Дней:          {format_big_number(units['days'])}")
