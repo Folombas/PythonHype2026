@@ -250,6 +250,30 @@ def life_in_units(bday):
 def format_big_number(n):
     """Форматирует число с пробелами как разделителями тысяч."""
     return f"{n:,}".replace(",", " ")
+    
+# ---------- Совместимость имён ----------
+
+COMPATIBILITY_VERDICTS = [
+    (85, "💞 Идеальная пара! Вам суждено быть вместе."),
+    (70, "💖 Отличная совместимость. Доверяйте друг другу."),
+    (55, "💛 Хорошие шансы. Работайте над отношениями."),
+    (40, "💙 Есть над чем поработать, но всё возможно."),
+    (25, "💚 Дружба — тоже прекрасно!"),
+    (0,  "💔 Звёзды советуют остаться друзьями."),
+]
+
+
+def name_compatibility(name1, name2):
+    """Возвращает (процент, вердикт) для двух имён."""
+    a, b = sorted([name1.lower().strip(), name2.lower().strip()])
+    seed = f"{a}+{b}"
+    h = int(hashlib.md5(seed.encode()).hexdigest(), 16)
+    percent = h % 101  # 0..100
+
+    for threshold, verdict in COMPATIBILITY_VERDICTS:
+        if percent >= threshold:
+            return percent, verdict
+    return percent, COMPATIBILITY_VERDICTS[-1][1]    
 
 
 # ---------- Расчёт возраста ----------
@@ -361,6 +385,20 @@ def main():
     print(f"  Ударов сердца: {format_big_number(units['heartbeats'])}")
     print(f"  Вдохов:        {format_big_number(units['breaths'])}")
     print(f"  Дней во сне:   {format_big_number(units['sleep_days'])}")
+    
+    print()
+    print(f"{Color.PURPLE}💘 Проверка совместимости имён:{Color.RESET}")
+    other = input("  Введите имя второй половинки (или Enter, чтобы пропустить): ").strip()
+    if other:
+        percent, verdict = name_compatibility(name, other)
+        bar_len = 20
+        filled = int(percent / 100 * bar_len)
+        bar = "█" * filled + "░" * (bar_len - filled)
+        print(f"  {name} ❤ {other}")
+        print(f"  {bar}  {percent}%")
+        print(f"  {verdict}")
+    else:
+        print("  Пропущено.")
 
     print()
     if info["days_to_next"] == 0:
