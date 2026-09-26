@@ -6,6 +6,7 @@ import datetime
 import hashlib
 import math
 
+
 # ---------- ANSI-цвета для терминала ----------
 
 class Color:
@@ -82,7 +83,10 @@ def plural_days(n):
     if last in (2, 3, 4):
         return "дня"
     return "дней"
-    
+
+
+# ---------- Знак зодиака ----------
+
 def zodiac_sign(day, month):
     """Возвращает знак зодиака по дню и месяцу рождения."""
     if (month == 1 and day <= 19) or (month == 12 and day >= 22):
@@ -106,8 +110,11 @@ def zodiac_sign(day, month):
         if (month, day) < (m, d):
             return sign
 
-    return "Стрелец"    
-    
+    return "Стрелец"
+
+
+# ---------- Персональное предсказание ----------
+
 def daily_prediction(name):
     """Возвращает персональное предсказание на сегодня (детерминированное)."""
     today = datetime.date.today().isoformat()
@@ -126,8 +133,11 @@ def daily_prediction(name):
         "Сделайте сегодня то, что давно откладывали.",
         "Доверьтесь интуиции — она не подведёт.",
     ]
-    return predictions[h % len(predictions)]    
-    
+    return predictions[h % len(predictions)]
+
+
+# ---------- Биоритмы ----------
+
 def biorhythm(bday):
     """Рассчитывает биоритмы (физический, эмоциональный, интеллектуальный)."""
     days = (datetime.date.today() - bday).days
@@ -143,8 +153,9 @@ def render_bar(value, width=30):
     pos = int((value + 1) / 2 * (width - 1))
     bar = ["─"] * width
     bar[pos] = "●"
-    return "".join(bar)    
-    
+    return "".join(bar)
+
+
 # ---------- Космический возраст ----------
 
 PLANETS = [
@@ -157,17 +168,13 @@ PLANETS = [
     ("♆ Нептун",   164.79132),
 ]
 
+
 def cosmic_age(bday):
     """Возвращает список (планета, возраст на ней) для всех планет."""
     earth_years = (datetime.date.today() - bday).days / 365.2425
     return [(name, earth_years / period) for name, period in PLANETS]
 
-def cosmic_age(bday):
-    """Возвращает список (планета, возраст на ней) для всех планет."""
-    earth_years = (datetime.date.today() - bday).days / 365.2425
-    return [(name, earth_years / period) for name, period in PLANETS]  
-    
-    
+
 # ---------- Восточный календарь ----------
 
 EASTERN_ANIMALS = [
@@ -185,10 +192,42 @@ def eastern_animal(bday):
     предыдущий год.
     """
     year = bday.year
-    # Приблизительная граница китайского Нового года
     if (bday.month, bday.day) < (2, 20):
         year -= 1
-    return EASTERN_ANIMALS[(year - 4) % 12]      
+    return EASTERN_ANIMALS[(year - 4) % 12]
+
+
+# ---------- Нумерология ----------
+
+LIFE_PATH_MEANINGS = {
+    1: "Лидер. Независимость, воля, первопроходец.",
+    2: "Дипломат. Гармония, партнёрство, чуткость.",
+    3: "Творец. Общение, радость, самовыражение.",
+    4: "Строитель. Порядок, труд, надёжность.",
+    5: "Свободный. Перемены, приключения, любознательность.",
+    6: "Хранитель. Забота, семья, ответственность.",
+    7: "Мудрец. Анализ, глубина, духовность.",
+    8: "Достигатор. Власть, деньги, амбиции.",
+    9: "Гуманист. Сострадание, завершение, служение.",
+}
+
+
+def digit_sum(n):
+    """Складывает цифры числа, пока не получится одна цифра (1–9)."""
+    while n > 9:
+        n = sum(int(d) for d in str(n))
+    return n
+
+
+def life_path_number(bday):
+    """Число жизненного пути по дате рождения (1–9)."""
+    return digit_sum(bday.day + bday.month + bday.year)
+
+
+def personal_day_number(bday):
+    """Персональное число дня: life path + сегодняшняя дата."""
+    today = datetime.date.today()
+    return digit_sum(life_path_number(bday) + today.day + today.month)
 
 
 # ---------- Расчёт возраста ----------
@@ -260,10 +299,11 @@ def main():
     print()
     print(f"Отлично, {name}! Вам {info['years']} "
           f"{plural_years(info['years'])}.")
-    print(f"Ваш знак зодиака: {info['zodiac']}.")  
+    print(f"Ваш знак зодиака: {info['zodiac']}.")
     print(f"{Color.YELLOW}🌟 Предсказание на сегодня: "
-          f"{daily_prediction(name)}{Color.RESET}")   
-        print()
+          f"{daily_prediction(name)}{Color.RESET}")
+
+    print()
     print(f"{Color.CYAN}📊 Ваши биоритмы на сегодня:{Color.RESET}")
     bio = biorhythm(bday)
     print(f"  Физический:      {render_bar(bio['physical'])}  "
@@ -271,14 +311,25 @@ def main():
     print(f"  Эмоциональный:   {render_bar(bio['emotional'])}  "
           f"{bio['emotional']:+.2f}")
     print(f"  Интеллектуальный:{render_bar(bio['intellectual'])}  "
-          f"{bio['intellectual']:+.2f}") 
-        print()
+          f"{bio['intellectual']:+.2f}")
+
+    print()
     print(f"{Color.PURPLE}🚀 Ваш возраст на других планетах:{Color.RESET}")
     for planet, age in cosmic_age(bday):
-        print(f"  {planet:<12} {age:>7.2f} лет")  
-        print()
+        print(f"  {planet:<12} {age:>7.2f} лет")
+
+    print()
     print(f"{Color.RED}🐲 Восточный календарь: "
-          f"{eastern_animal(bday)}{Color.RESET}")               
+          f"{eastern_animal(bday)}{Color.RESET}")
+
+    print()
+    life_path = life_path_number(bday)
+    day_num = personal_day_number(bday)
+    print(f"{Color.CYAN}🔢 Число жизненного пути: {life_path}{Color.RESET}")
+    print(f"   {LIFE_PATH_MEANINGS[life_path]}")
+    print(f"{Color.CYAN}📅 Персональное число дня: {day_num}{Color.RESET}")
+
+    print()
     if info["days_to_next"] == 0:
         print(f"{Color.BOLD}{Color.RED}🎉 С днём рождения! 🎉{Color.RESET}")
     else:
