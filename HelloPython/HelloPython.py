@@ -28,7 +28,6 @@ def main():
     print()
     bday = ask_birth_date()
     info = age_info(bday)
-
     print()
     print(f"Отлично, {name}! Вам {info['years']} "
           f"{plural_years(info['years'])}.")
@@ -62,7 +61,6 @@ def main():
     print(f"{Color.CYAN}🔢 Число жизненного пути: {life_path}{Color.RESET}")
     print(f"   {LIFE_PATH_MEANINGS[life_path]}")
     print(f"{Color.CYAN}📅 Персональное число дня: {day_num}{Color.RESET}")
-
     units = life_in_units(bday)
     print()
     print(f"{Color.BLUE}⏳ Ваша жизнь в разных единицах:{Color.RESET}")
@@ -94,7 +92,6 @@ def main():
     gen = generation(bday)
     print()
     print(f"{Color.YELLOW}👥 Ваше поколение: {gen}{Color.RESET}")
-
     city_horo = None
     print()
     print(f"{Color.GREEN}🏡 Магия места рождения:{Color.RESET}")
@@ -110,7 +107,6 @@ def main():
     else:
         print("  Пропущено.")
 
-    # ---------- Лунная фаза ----------
     moon = moon_report(bday)
     print()
     print(f"{Color.WHITE}🌙 Лунная фаза:{Color.RESET}")
@@ -125,7 +121,6 @@ def main():
     else:
         print(f"До следующего дня рождения: {info['days_to_next']} "
               f"{plural_days(info['days_to_next'])}.")
-
     print()
     save = input(f"{Color.CYAN}💾 Сохранить профиль в файл? (y/n): "
                  f"{Color.RESET}").strip().lower()
