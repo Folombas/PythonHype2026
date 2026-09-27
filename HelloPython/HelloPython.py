@@ -16,6 +16,7 @@ from hellopython.generation    import generation
 from hellopython.birthplace    import birth_place_horoscope
 from hellopython.greetings     import greet
 from hellopython.profile       import build_profile_text, save_profile
+from hellopython.moon          import moon_report
 
 
 def main():
@@ -109,6 +110,15 @@ def main():
     else:
         print("  Пропущено.")
 
+    # ---------- Лунная фаза ----------
+    moon = moon_report(bday)
+    print()
+    print(f"{Color.WHITE}🌙 Лунная фаза:{Color.RESET}")
+    print(f"  При рождении: {moon['bday_emoji']} {moon['bday_name']} "
+          f"(освещённость {moon['bday_illumination']:.0f}%)")
+    print(f"  Сегодня:      {moon['today_emoji']} {moon['today_name']} "
+          f"(освещённость {moon['today_illumination']:.0f}%)")
+
     print()
     if info["days_to_next"] == 0:
         print(f"{Color.BOLD}{Color.RED}🎉 С днём рождения! 🎉{Color.RESET}")
@@ -129,6 +139,7 @@ def main():
             "eastern": eastern,
             "city_horo": city_horo,
             "compatibility": compat,
+            "moon": moon,
         }
         text = build_profile_text(name, bday, info, extras)
         path = save_profile(name, text)
