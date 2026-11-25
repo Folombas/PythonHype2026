@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import UTC
+
 import polars as pl
 
 from hype.models import Article
@@ -16,16 +18,15 @@ _BASE_SCHEMA: dict[str, pl.DataType] = {
 
 
 def to_frame(articles: list[Article]) -> pl.DataFrame:
-    """Список статей -> строгий Polars DataFrame (naive UTC)."""
+    """Список статей -> строгий Polars DataFrame (наивные даты в UTC)."""
     if not articles:
-        empty = pl.DataFrame(schema=_BASE_SCHEMA)
-        return empty.with_columns(pl.lit("").alias("url"), pl.lit("").alias("summary")).drop("url", "summary")
+        return pl.DataFrame(schema=_BASE_SCHEMA)
     rows = [
         {
             "id": a.id,
             "title": a.title,
             "source": a.source,
-            "published_at": a.published_at.replace(tzinfo=None),
+            "published_at": a.published_at.astimezone(UTC).replace(tzinfo=None),
             "keywords": a.keywords,
         }
         for a in articles

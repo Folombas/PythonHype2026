@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 import duckdb
@@ -14,8 +14,8 @@ _COLS = "id, title, source, url, published_at, summary, keywords"
 
 
 def _naive(value: datetime) -> datetime:
-    """DuckDB TIMESTAMP наивный: aware-даты приводим к UTC и снимаем tzinfo."""
-    return value.replace(tzinfo=None)
+    """DuckDB TIMESTAMP наивный: aware-даты переводим в UTC и снимаем tzinfo."""
+    return value.astimezone(UTC).replace(tzinfo=None)
 
 
 class ArticleRepository:
