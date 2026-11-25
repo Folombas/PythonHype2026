@@ -58,7 +58,7 @@ def test_load_seed_validates_schema(tmp_path: Path) -> None:
 def test_load_seed_strict_schema() -> None:
     """Схема строгая: keyword типа str вместо list обрывает загрузку поларс-ошибкой."""
     bad = [dict(SEED[0], keywords="ставка")]
-    with pytest.raises(Exception):
+    with pytest.raises(pl.exceptions.PolarsError):
         pl.DataFrame(bad, schema=ARTICLE_SCHEMA, strict=True)
 
 
