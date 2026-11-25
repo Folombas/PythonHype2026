@@ -3,8 +3,6 @@
 from datetime import datetime, timezone
 from pathlib import Path
 
-import pytest
-
 from hype.models import Article, QueryParams
 from hype.storage import ArticleRepository
 

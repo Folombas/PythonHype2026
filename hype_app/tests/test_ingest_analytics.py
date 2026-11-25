@@ -1,9 +1,13 @@
 """Тесты приёма (seed + RSS) и аналитики: pure, без сети."""
 
+import json
 from pathlib import Path
 
+import polars as pl
+import pytest
+
 from hype.analytics import keyword_score, per_day, top_sources
-from hype.ingest import load_seed, parse_rss
+from hype.ingest import ARTICLE_SCHEMA, load_seed, parse_rss
 from hype.models import Article
 
 SEED = [
@@ -51,16 +55,10 @@ def test_load_seed_validates_schema(tmp_path: Path) -> None:
     assert articles[0].keywords == ["ставка", "цб"]
 
 
-def test_load_seed_network() -> None:
-    """Схема строгая: неизвестное поле в JSON обрывает загрузку."""
-    with pytest.raises(Exception):  # полars/VA ValidationError - ок, важен факт ошибки
-        import json
-
-        bad = [dict(SEED[0], downside="x")]
-        from hype.ingest import ARTICLE_SCHEMA
-
-        import polars as pl
-
+def test_load_seed_strict_schema() -> None:
+    """Схема строгая: keyword типа str вместо list обрывает загрузку поларс-ошибкой."""
+    bad = [dict(SEED[0], keywords="ставка")]
+    with pytest.raises(Exception):
         pl.DataFrame(bad, schema=ARTICLE_SCHEMA, strict=True)
 
 
@@ -79,20 +77,17 @@ def test_parse_rss_deterministic_ids() -> None:
 
 
 def test_top_sources() -> None:
-    arts = _articles()
-    stats = top_sources(arts)
-    assert stats[0] == {"source": "Demo", "count": 1} or stats[0]["count"] == 1
+    stats = top_sources(_articles())
+    assert stats[0] == {"source": "Demo", "count": 1}
+    assert len(stats) == 2
 
 
 def test_per_day_sorted() -> None:
     days = per_day(_articles())
-    assert [row["day"] for row in days] == sorted(str(row["day"]) for row in days)
+    assert [str(row["day"]) for row in days] == sorted(str(row["day"]) for row in days)
     assert len(days) == 2
 
 
 def test_keyword_score() -> None:
     stats = keyword_score(_articles(), top=5)
     assert {"keyword": "ставка", "score": 1} in stats
-
-
-import json
