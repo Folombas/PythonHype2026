@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 import duckdb
 
@@ -80,12 +80,12 @@ class ArticleRepository:
         ]
 
     def get(self, article_id: str) -> Article | None:
-        found = self._select(f"SELECT {_COLS} FROM articles WHERE id = ?", [article_id])
+        found = self._select("SELECT " + _COLS + " FROM articles WHERE id = ?", [article_id])
         return found[0] if found else None
 
     def query(self, params: QueryParams) -> list[Article]:
         """Выборка с фильтрами и пагинацией (параметризованный SQL)."""
-        sql = f"SELECT {_COLS} FROM articles WHERE 1=1"
+        sql = "SELECT " + _COLS + " FROM articles WHERE 1=1"
         args: list[object] = []
         if params.source:
             sql += " AND source = ?"

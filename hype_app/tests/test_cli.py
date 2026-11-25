@@ -1,6 +1,6 @@
 """CLI smoke-тесты: Typer CliRunner, временная DuckDB."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from typer.testing import CliRunner
@@ -20,7 +20,7 @@ def _seed(db: Path) -> None:
                 title="Ставка без изменений",
                 source="Demo",
                 url="https://example.com/c-001",
-                published_at=datetime(2026, 11, 3, tzinfo=timezone.utc),
+                published_at=datetime(2026, 11, 3, tzinfo=UTC),
                 summary="Регулятор сохранил ставку. Рынок спокоен.",
                 keywords=["ставка"],
             )

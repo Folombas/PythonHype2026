@@ -1,6 +1,6 @@
 """Юнит-тесты строгих моделей (pure)."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
@@ -14,7 +14,7 @@ def _article(**overrides: object) -> dict:
         "title": "Ставка без изменений",
         "source": "Demo",
         "url": "https://example.com/a-001",
-        "published_at": datetime(2026, 11, 3, 10, tzinfo=timezone.utc),
+        "published_at": datetime(2026, 11, 3, 10, tzinfo=UTC),
         "summary": "Текст новости.",
         "keywords": ["ставка"],
     }

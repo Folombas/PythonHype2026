@@ -1,6 +1,6 @@
 """Детерминизм extractive-fallback: без сети и ключей."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from hype.ai.fallback import ExtractiveSummarizer
 from hype.models import Article
@@ -12,7 +12,7 @@ def _article(summary: str) -> Article:
         title="Ставка без изменений",
         source="Demo",
         url="https://example.com/ai-001",
-        published_at=datetime(2026, 11, 3, tzinfo=timezone.utc),
+        published_at=datetime(2026, 11, 3, tzinfo=UTC),
         summary=summary,
         keywords=[],
     )

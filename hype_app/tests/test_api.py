@@ -1,6 +1,6 @@
 """API-тесты на TestClient с временной DuckDB (httpx)."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -14,11 +14,11 @@ pytestmark = pytest.mark.filterwarnings("ignore::DeprecationWarning")
 
 def _article(i: int, source: str = "Demo") -> Article:
     return Article(
-        id=f"a-{i:03d}",
-        title=f"Новость {i}",
+        id="a-" + format(i, "03d"),
+        title="Новость " + str(i),
         source=source,
-        url=f"https://example.com/a-{i:03d}",
-        published_at=datetime(2026, 11, 3 + i, 10, tzinfo=timezone.utc),
+        url="https://example.com/a-" + format(i, "03d"),
+        published_at=datetime(2026, 11, 3 + i, 10, tzinfo=UTC),
         summary="Регулятор сохранил ставку. Рынок отреагировал спокойно.",
         keywords=["ставка"],
     )

@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
-from email.utils import parsedate_to_datetime
-from datetime import datetime, timezone
-from pathlib import Path
 import xml.etree.ElementTree as ET
+from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
+from pathlib import Path
 
 import polars as pl
 
@@ -32,8 +32,8 @@ def load_seed(path: str | Path) -> list[Article]:
 
 
 def _rss_id(url: str, published: datetime) -> str:
-    digest = hashlib.sha256(f"{url}|{published.isoformat()}".encode("utf-8")).hexdigest()[:12]
-    return f"rss-{digest}"
+    digest = hashlib.sha256((url + "|" + published.isoformat()).encode()).hexdigest()[:12]
+    return "rss-" + digest
 
 
 def parse_rss(xml: str) -> list[Article]:
@@ -47,7 +47,7 @@ def parse_rss(xml: str) -> list[Article]:
         desc = (item.findtext("description") or "").strip()
         if not title or not link:
             continue
-        published = parsedate_to_datetime(pub_raw) if pub_raw else datetime.now(timezone.utc)
+        published = parsedate_to_datetime(pub_raw) if pub_raw else datetime.now(UTC)
         out.append(
             Article(
                 id=_rss_id(link, published),

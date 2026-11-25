@@ -1,6 +1,6 @@
 """Тесты DuckDB-хранилища на временных базах."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from hype.models import Article, QueryParams
@@ -9,11 +9,11 @@ from hype.storage import ArticleRepository
 
 def _article(i: int, source: str = "S", day: int = 1) -> Article:
     return Article(
-        id=f"t-{i:03d}",
-        title=f"Новость {i}",
+        id="t-" + format(i, "03d"),
+        title="Новость " + str(i),
         source=source,
-        url=f"https://example.com/t-{i:03d}",
-        published_at=datetime(2026, 11, day, 12, tzinfo=timezone.utc),
+        url="https://example.com/t-" + format(i, "03d"),
+        published_at=datetime(2026, 11, day, 12, tzinfo=UTC),
         summary="Текст.",
         keywords=["k"],
     )
@@ -54,7 +54,7 @@ def test_query_filters_and_pagination(tmp_path: Path) -> None:
         assert single[0].id == "t-003"  # свежие первыми
         assert repo.query(QueryParams(limit=10, offset=1))[0].id == "t-002"
         window = repo.query(QueryParams(
-            since=datetime(2026, 11, 6, tzinfo=timezone.utc),
+            since=datetime(2026, 11, 6, tzinfo=UTC),
         ))
         assert {a.id for a in window} == {"t-002", "t-003"}
     finally:

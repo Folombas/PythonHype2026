@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import logging
 import uuid
-from typing import Callable, Awaitable
+from collections.abc import Awaitable, Callable
+from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,7 +22,6 @@ class RequestIdMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(
         self, request: Request, call_next: Callable[[Request], Awaitable[Any]]
-
     ) -> Any:
         request_id = request.headers.get("x-request-id") or uuid.uuid4().hex[:12]
         request.state.request_id = request_id

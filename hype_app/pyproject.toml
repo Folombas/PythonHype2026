@@ -45,6 +45,10 @@ src = ["src", "tests"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
 
+[tool.ruff.lint.per-file-ignores]
+# typer.Option/Argument в значениях по умолчанию - идиома Typer, не дефект.
+"src/hype/cli.py" = ["B008"]
+
 [tool.mypy]
 python_version = "3.11"
 strict = true
