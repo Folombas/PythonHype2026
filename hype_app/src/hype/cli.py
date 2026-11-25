@@ -85,7 +85,7 @@ def stats(
         repo.close()
     if not articles:
         console.print("[yellow]база пуста: сначала выполни hype ingest[/yellow]")
-        raise typer.Exit()
+        raise typer.Exit(code=1)
 
     t1 = Table("источник", "статей", title=f"Топ источников (top={top})")
     for row in top_sources(articles, top):
