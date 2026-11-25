@@ -3,11 +3,11 @@
 import json
 from pathlib import Path
 
-import polars as pl
 import pytest
+from pydantic import ValidationError
 
 from hype.analytics import keyword_score, per_day, top_sources
-from hype.ingest import ARTICLE_SCHEMA, load_seed, parse_rss
+from hype.ingest import load_seed, parse_rss
 from hype.models import Article
 
 SEED = [
@@ -55,11 +55,12 @@ def test_load_seed_validates_schema(tmp_path: Path) -> None:
     assert articles[0].keywords == ["ставка", "цб"]
 
 
-def test_load_seed_strict_schema() -> None:
-    """Схема строгая: keyword типа str вместо list обрывает загрузку поларс-ошибкой."""
-    bad = [dict(SEED[0], keywords="ставка")]
-    with pytest.raises(pl.exceptions.PolarsError):
-        pl.DataFrame(bad, schema=ARTICLE_SCHEMA, strict=True)
+def test_load_seed_rejects_broken_row(tmp_path: Path) -> None:
+    """Сломанная строка рвёт цепочку приёма: model-валидация не принимает None в поле."""
+    seed_file = tmp_path / "bad.json"
+    seed_file.write_text(json.dumps([dict(SEED[0], summary=None)]), encoding="utf-8")
+    with pytest.raises(ValidationError):
+        load_seed(seed_file)
 
 
 def test_parse_rss_normalizes() -> None:
