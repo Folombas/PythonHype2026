@@ -1,0 +1,13 @@
+# hype_app локальные артефакты (корневой .gitignore не трогаем)
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+uv.lock
+
+data/
+*.duckdb
+*.duckdb.wal
+.env
