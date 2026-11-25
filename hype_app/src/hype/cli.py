@@ -120,7 +120,7 @@ def summarize(
         console.print(f"[red]статья не найдена:[/red] {article_id}")
         raise typer.Exit(code=1)
     result = build_summarizer(get_settings()).summarize(found)
-    console.print(f"[bold][{result.method}][/bold] {result.text}")
+    console.print(f"[bold]{result.method}[/bold] {result.text}")
 
 
 @app.command()
