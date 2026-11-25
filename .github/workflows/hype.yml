@@ -1,0 +1,37 @@
+name: hype-ci
+
+on:
+  push:
+    paths:
+      - "hype_app/**"
+      - ".github/workflows/hype.yml"
+  pull_request:
+    paths:
+      - "hype_app/**"
+      - ".github/workflows/hype.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hype_app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+
+      - name: Sync dependencies
+        run: uv sync
+
+      - name: Ruff lint
+        run: uv run ruff check .
+
+      - name: Bytecode compile
+        run: uv run python -m compileall -q src tests
+
+      - name: Pytest
+        run: uv run pytest -q
