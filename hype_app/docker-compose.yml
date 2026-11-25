@@ -1,0 +1,24 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      HYPE_DB_PATH: /app/data/hype.duckdb
+      HYPE_SEED_PATH: /app/data/seed_articles.json
+    volumes:
+      - hype-data:/app/data
+
+  dashboard:
+    build: .
+    command: uv run --no-dev streamlit run src/hype/dashboard.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    environment:
+      HYPE_DB_PATH: /app/data/hype.duckdb
+      HYPE_SEED_PATH: /app/data/seed_articles.json
+    volumes:
+      - hype-data:/app/data
+
+volumes:
+  hype-data:
