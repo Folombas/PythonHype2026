@@ -12,6 +12,7 @@ from hype.ai.fallback import ExtractiveSummarizer
 from hype.ai.langchain_adapter import LangChainSummarizer, make_runner
 from hype.api.middleware import install_middleware
 from hype.config import Settings, get_settings
+from hype.storage import ArticleRepository
 
 
 def build_summarizer(settings: Settings) -> Any:
