@@ -29,7 +29,12 @@ def test_deterministic_output() -> None:
 def test_sentences_from_source() -> None:
     summary = "Регулятор сохранил ставку. Рынок отреагировал спокойно. Вводные будущих месяцев важны."
     text = ExtractiveSummarizer(sentences=1).summarize(_article(summary)).text
-    assert text in {s.strip() for s in summary.split(".") if s.strip()} or text == summary.strip()
+    assert text in (
+        "Регулятор сохранил ставку.",
+        "Рынок отреагировал спокойно.",
+        "Вводные будущих месяцев важны.",
+    )
+    assert text in summary
 
 
 def test_falls_back_to_title() -> None:
