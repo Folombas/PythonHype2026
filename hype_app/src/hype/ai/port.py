@@ -17,6 +17,6 @@ class SummarizerPort(Protocol):
 
 def get_default_summarizer() -> SummarizerPort:
     """Фабрика по умолчанию: детерминированный extractive-fallback (без сети и ключей)."""
-    from hype.fallback import ExtractiveSummarizer  # локальный импорт: фабрика
+    from hype.ai.fallback import ExtractiveSummarizer  # локальный импорт: фабрика
 
     return ExtractiveSummarizer()
