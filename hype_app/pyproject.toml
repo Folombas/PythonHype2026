@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hype-app"
+version = "0.1.0"
+description = "FinPulse Hype: news hype pipeline (ingest, analytics, AI summaries, API, CLI, dashboard)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn[standard]>=0.27",
+  "pydantic>=2.5",
+  "pydantic-settings>=2.1",
+  "polars>=0.20",
+  "duckdb>=0.10",
+  "typer>=0.12",
+  "rich>=13.7",
+  "streamlit>=1.31",
+]
+
+[project.optional-dependencies]
+ai = ["langchain>=0.2"]
+
+[project.scripts]
+hype = "hype.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hype"]
